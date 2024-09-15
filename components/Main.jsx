@@ -1,31 +1,22 @@
-import React, { useState, useEffect } from "react"; // Asegúrate de importar React y los hooks
-import { View, ActivityIndicator, FlatList } from "react-native";
+import { useEffect, useState } from "react";
+import { FlatList, ActivityIndicator } from "react-native";
 import { getLatestGames } from "../lib/metacritic";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AnimatedGameCard } from "./GameCard";
-import { Logo } from "./Logo";
+import { Screen } from "./Screen";
 
-export default function Main() {
+export function Main() {
   const [games, setGames] = useState([]);
-  const insets = useSafeAreaInsets();
 
   useEffect(() => {
-    getLatestGames()
-      .then((games) => {
-        setGames(games);
-      })
-      .catch((error) => {
-        console.error("Error fetching games:", error); // Manejo de errores
-      });
+    getLatestGames().then((games) => {
+      setGames(games);
+    });
   }, []);
-  return (
-    <View style={{ marginTop: insets.top, marginBottom: insets.bottom }}>
-      <View style={{ marginBottom: 20 }}>
-        <Logo />
-      </View>
 
+  return (
+    <Screen>
       {games.length === 0 ? (
-        <ActivityIndicator />
+        <ActivityIndicator color={"#fff"} size={"large"} />
       ) : (
         <FlatList
           data={games}
@@ -35,6 +26,6 @@ export default function Main() {
           )}
         />
       )}
-    </View>
+    </Screen>
   );
 }
